@@ -1,0 +1,21 @@
+<script src="/socket.io/socket.io.js"></script>
+<ul class="collection" id="booms">
+
+</ul>
+<script>
+    var boomStore = {};
+    var socket = io();
+    socket.on('boom add', function(object){
+        if(boomStore[object.author.id] == null) boomStore[object.author.id] = [];
+        boomStore[object.author.id].push(object);
+        $('#booms').append('<li boom-author="' + object.author.id + '" class="boom collection-item avatar"> <i class="material-icons circle red">' + (object.boomData.icon || "folder") + '</i> <a class="boomLink" target="_blank" boom-author="' + object.author.id + '" href="' + (object.boomData.url || "http://localhost") + '"><span class="title">' + (object.boomData.title || "Untitled") + '</span></a> <p>' + (object.boomData.message || "No message provided.") + '</p></a> </li>');
+    });
+    socket.on('boom removeServer', function(object){
+        $('li[boom-author="' + object.author.id + '"]').remove();
+    });
+    $(document.body).on('click', '.boomLink' ,function(){
+        socket.emit('boom clicked', {url: $(this).attr("href"), authorId: $(this).attr("boom-author")});
+        $(this).parent().remove();
+    });
+</script>
+<small>This page will be populated with data published via telnet on port 8888</small>
