@@ -77,7 +77,7 @@ function receiveData(socket, data) {
  */
 function closeSocket(socket) {
   var key = socket.remoteAddress + ":" + socket.remotePort;
-  for(var i = 0; i < booms.length; i++){
+  for(var i = booms.length -1; i >= 0; i--){
     if(booms[i].author.id == key){
       booms.splice(i, 1);
     }
